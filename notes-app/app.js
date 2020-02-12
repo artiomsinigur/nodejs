@@ -6,8 +6,21 @@ const getNotes = require('./notes');
 yargs.command({
     command: 'add',
     describe: 'Store new resource',
-    handler: function () {
-        console.log(log('Adding new resource!'));
+    builder: {
+        title: {
+            describe: 'Resource title',
+            demandOption: true,
+            type: 'string',
+        },
+        body: {
+            describe: 'Body content',
+            demandOption: false,
+            type: 'string', 
+        }
+    },
+    handler: function (argv) {
+        console.log(log('Title: ' + argv.title));
+        console.log(log('Body: ' + argv.body));
     }
 });
 
@@ -23,19 +36,21 @@ yargs.command({
 // Create list command
 yargs.command({
     command: 'list',
-    describe: 'Show a list of resource',
+    describe: 'List all resources',
     handler: function () {
-        console.log(log('Showing a list of resource!'));
+        console.log(log('Listing all resources!'));
     }
 });
 
 // Create read command
 yargs.command({
     command: 'read',
-    describe: 'Read resource',
+    describe: 'Read a resource',
     handler: function () {
-        console.log(log('Reading resource!'));
+        console.log(log('Reading a resource!'));
     }
 });
 
-console.log(yargs.argv);
+// Parsing the arguments
+yargs.parse();
+// console.log(yargs.argv);
