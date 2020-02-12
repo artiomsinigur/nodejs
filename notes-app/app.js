@@ -1,5 +1,5 @@
 const {log, error, success, danger} = require('./chalk');
-const yargs = require('./yargs');
+const yargs = require('yargs');
 const {getNotes, addNote, removeNote} = require('./notes');
 
 // Create add command
@@ -18,7 +18,7 @@ yargs.command({
             type: 'string', 
         }
     },
-    handler: function (argv) {
+    handler(argv) {
         addNote(argv.title, argv.body);
     }
 });
@@ -34,7 +34,7 @@ yargs.command({
             type: 'string'
         },
     },
-    handler: function (argv) {
+    handler(argv) {
         removeNote(argv.title);
     }
 });
@@ -43,7 +43,7 @@ yargs.command({
 yargs.command({
     command: 'list',
     describe: 'List all resources',
-    handler: function () {
+    handler() {
         console.log(log('Listing all resources!'));
     }
 });
@@ -52,7 +52,7 @@ yargs.command({
 yargs.command({
     command: 'read',
     describe: 'Read a resource',
-    handler: function () {
+    handler() {
         console.log(log('Reading a resource!'));
     }
 });

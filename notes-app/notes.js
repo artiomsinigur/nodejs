@@ -5,24 +5,26 @@ const getNotes = function() {
     return 'My notes...';
 }
 
-// Store new resource
+/**
+ * Store new resource
+ * @param {string} title 
+ * @param {string} body 
+ */
 const addNote = function(title, body) {
     // If problem with loadData return an empty array and stop
     const notes = loadNotes();
 
     // Check if note title exist already
-    const duplicateNotes = notes.filter(note => {
-        return note.title === title;
-    });
+    const duplicateNotes = notes.filter(note => note.title === title);
 
     // Prevents duplicated notes to be added
     if (duplicateNotes.length > 0) {
-        console.log('Duplicate of notes');
+        console.log(error('Duplicate of notes'));
     } else {
         // Otherwise store data
         notes.push({title, body});
         storeNotes(notes);
-        console.log('Notes was stored successfully!');
+        console.log(success('Notes stored successfully!'));
     }
 }
 
@@ -41,20 +43,24 @@ const loadNotes = function() {
     }
 }
 
-// Write data into file
+/**
+ * Write data into file
+ * @param {object} notes 
+ */
 const storeNotes = function(notes) {
     const dataJSON = JSON.stringify(notes);
     fs.writeFileSync('notes.json', dataJSON);
 }
 
-// Remove note 
+/**
+ * Remove note 
+ * @param {string} title 
+ */
 const removeNote = function(title) {
     const originalNotes = loadNotes();
 
     // Return all notes that are different of current one
-    const notesToKeep = originalNotes.filter(note => {
-        return note.title !== title;
-    });
+    const notesToKeep = originalNotes.filter(note => note.title !== title);
 
     if (originalNotes.length !== notesToKeep.length) {
         storeNotes(notesToKeep);
