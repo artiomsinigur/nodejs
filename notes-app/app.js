@@ -1,0 +1,1 @@
+false.writeFileSync('notes.txt', 'This file was created by NodeJs');
