@@ -35,7 +35,6 @@ yargs.command({
         },
     },
     handler: function (argv) {
-        console.log(danger('Removed' + argv.title));
         removeNote(argv.title);
     }
 });

@@ -1,4 +1,5 @@
 const fs = require('fs');
+const {success, error} = require('./chalk');
 
 const getNotes = function() {
     return 'My notes...';
@@ -25,7 +26,10 @@ const addNote = function(title, body) {
     }
 }
 
-// Load data from the file
+/**
+ * Load data from the file
+ * @return array of objects
+ */
 const loadNotes = function() {
     try {
         // Read json data
@@ -43,8 +47,21 @@ const storeNotes = function(notes) {
     fs.writeFileSync('notes.json', dataJSON);
 }
 
-const removeNote = function(note) {
-    console.log('File was removed' + note);
+// Remove note 
+const removeNote = function(title) {
+    const originalNotes = loadNotes();
+
+    // Return all notes that are different of current one
+    const notesToKeep = originalNotes.filter(note => {
+        return note.title !== title;
+    });
+
+    if (originalNotes.length !== notesToKeep.length) {
+        storeNotes(notesToKeep);
+        console.log(success('Note removed!'));
+    } else {
+        console.log(error('No note found!'));
+    }
 }
 
 module.exports = {getNotes, addNote, removeNote};
