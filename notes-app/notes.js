@@ -1,10 +1,6 @@
 const fs = require('fs');
 const {log, success, error} = require('./chalk');
 
-const getNotes = function() {
-    return 'My notes...';
-}
-
 /**
  * Store new resource
  * @param {string} title 
@@ -15,7 +11,7 @@ const addNote = function(title, body) {
     const notes = loadNotes();
 
     // Check if note title exist already
-    const duplicateNotes = notes.filter(note => note.title === title);
+    const duplicateNotes = notes.find(note => note.title === title);
 
     // Prevents duplicated notes to be added
     if (duplicateNotes.length > 0) {
@@ -83,4 +79,22 @@ const listNotes = function() {
     });
 }
 
-module.exports = {getNotes, addNote, removeNote, listNotes};
+/**
+ * Read note
+ * @param {string} title 
+ */
+const readNote = function(title) {
+    const notes = loadNotes();
+    // Retrieve the first note found
+    const note = notes.find(note => note.title === title);
+
+    // If no note found display error
+    if (note !== undefined) {
+        console.log(success(note.title));
+        console.log(log(note.body));
+    } else {
+        console.log(error('No note found!'));
+    }
+}
+
+module.exports = {addNote, removeNote, listNotes, readNote};
