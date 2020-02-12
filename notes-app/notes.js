@@ -1,5 +1,5 @@
 const fs = require('fs');
-const {success, error} = require('./chalk');
+const {log, success, error} = require('./chalk');
 
 const getNotes = function() {
     return 'My notes...';
@@ -70,4 +70,17 @@ const removeNote = function(title) {
     }
 }
 
-module.exports = {getNotes, addNote, removeNote};
+/**
+ * List all notes
+ */
+const listNotes = function() {
+    const notes = loadNotes();
+
+    // Show every note from the file
+    console.log(log('Your notes'));
+    notes.forEach(note => {
+        console.log(note.title);
+    });
+}
+
+module.exports = {getNotes, addNote, removeNote, listNotes};

@@ -1,6 +1,6 @@
 const {log, error, success, danger} = require('./chalk');
 const yargs = require('yargs');
-const {getNotes, addNote, removeNote} = require('./notes');
+const {getNotes, addNote, removeNote, listNotes} = require('./notes');
 
 // Create add command
 yargs.command({
@@ -44,7 +44,7 @@ yargs.command({
     command: 'list',
     describe: 'List all resources',
     handler() {
-        console.log(log('Listing all resources!'));
+        listNotes();
     }
 });
 
