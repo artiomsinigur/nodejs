@@ -10,9 +10,25 @@ const fs = require('fs');
 // fs.writeFileSync('1-json.json', bookJSON);
 
 // Than, read and return data on bit format from json file
-const dataBuffer = fs.readFileSync('1-json.json');
-const dataJSON = dataBuffer.toString();
+// const dataBuffer = fs.readFileSync('1-json.json');
+// const dataJSON = dataBuffer.toString();
 
-// Finlay, parse JSON data to object
-const book = JSON.parse(dataJSON);
-console.log(book);
+// // Finlay, parse JSON data to object
+// const book = JSON.parse(dataJSON);
+// console.log(book);
+
+
+// Read JSON file
+const dataJSON = fs.readFileSync('1-json.json').toString();
+
+// Change data
+const dataObj = JSON.parse(dataJSON);
+dataObj.name = 'Artiom';
+dataObj.planet = 'Mars';
+dataObj.age = 31;
+
+// Stringify data to JSON
+const updatedData = JSON.stringify(dataObj);
+
+// Overwrite the original data
+fs.writeFileSync('1-json.json', updatedData);
