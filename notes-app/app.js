@@ -1,8 +1,11 @@
 const {log, error, success} = require('./chalk');
-
 const getNotes = require('./notes');
 
-const result = getNotes();
-console.log(error('This is an error message'));
-console.log(success('This is an success message'));
-console.log(log('This is an ordinary message'));
+// Get arguments form user in CLI
+const command = process.argv[2];
+
+if (command === 'add') {
+    console.log(success('Store some note!'));
+} else if(command === 'remove') {
+    console.log(success('Remove note!'));
+}
