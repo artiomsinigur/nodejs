@@ -1,6 +1,10 @@
 const fs = require('fs');
 const {log, success, error} = require('./chalk');
 
+// To start debugging, write word key debugger, than in CLI write node inspect(after restart) app.js add ...
+// Go to chrome and write chrome://inspect 
+// debugger;
+
 /**
  * Store new resource
  * @param {string} title 
@@ -14,13 +18,13 @@ const addNote = function(title, body) {
     const duplicateNotes = notes.find(note => note.title === title);
 
     // Prevents duplicated notes to be added
-    if (duplicateNotes.length > 0) {
-        console.log(error('Duplicate of notes'));
-    } else {
+    if (duplicateNotes === undefined) {
         // Otherwise store data
         notes.push({title, body});
         storeNotes(notes);
         console.log(success('Notes stored successfully!'));
+    } else {
+        console.log(error('Duplicate of notes'));
     }
 }
 
