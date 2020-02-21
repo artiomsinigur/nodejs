@@ -8,7 +8,7 @@ const app = express();
 // Get the path to public folder to send index.html file
 const publicDirectoryPath = path.join(__dirname, '../public');
 // app.use() - customize the server
-    // static will load all html files from public folder(index.html is by default)
+    // Load all html files from public folder(index.html is by default)
 app.use(express.static(publicDirectoryPath));
 
 // req - incoming request to the server
