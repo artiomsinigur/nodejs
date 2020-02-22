@@ -57,15 +57,23 @@ app.get('/weather', (req, res) => {
 
     getGeocoding(req.query.address, (err, {longitude, latitude, placeName} = {}) => {
         if (err) {
-            return res.render('weather.html', {error: err});
+            // return res.render('weather.html', {error: err});
+            return res.send({error: err});
         }
 
         getForecast(longitude, latitude, (err, forecastData) => {
             if (err) {
-                return res.render('weather.html', {error: err});
+                // return res.render('weather.html', {error: err});
+                return res.send({error: err});
             }
 
-            res.render('weather.html', {
+            // res.render('weather.html', {
+            //     location: placeName,
+            //     forecast: forecastData,
+            // });
+
+            // When the parameter is an Array or Object, Express responds with the JSON:
+            res.send({
                 location: placeName,
                 forecast: forecastData,
             });
