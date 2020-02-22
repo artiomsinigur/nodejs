@@ -3,6 +3,10 @@
     {% block main %}
     <a href="/weather/country">Country</a>
         <h1>Page weather</h1>
-        <p>{{ location }}</p>
-        <p>{{ forecast }}</p>
+        {% if error %}
+            <p>{{ error }}</p>
+        {% else %}
+            <p>{{ location }}</p>
+            <p>{{ forecast }}</p>
+        {% endif %}
     {% endblock %}

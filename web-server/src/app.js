@@ -55,14 +55,14 @@ app.get('/weather', (req, res) => {
         });
     }
 
-    getGeocoding(req.query.address, (err, {longitude, latitude, placeName}) => {
+    getGeocoding(req.query.address, (err, {longitude, latitude, placeName} = {}) => {
         if (err) {
-            return res.send({error: err});
+            return res.render('weather.html', {error: err});
         }
 
         getForecast(longitude, latitude, (err, forecastData) => {
             if (err) {
-                return res.send({error: err});
+                return res.render('weather.html', {error: err});
             }
 
             res.render('weather.html', {
