@@ -47,7 +47,19 @@ app.get('/about', (req, res) => {
 })
 
 app.get('/weather', (req, res) => {
-    res.render('weather.html');
+    if (!req.query.address) {
+        return res.send({
+            error: 'You must provide an address',
+        });
+    }
+
+    res.send({
+        location: req.query.address,
+    });
+
+    // res.render('weather.html', {
+    //     location: req.query.address,
+    // });
 })
 
 app.get('/weather/country', (req, res) => {
@@ -58,9 +70,25 @@ app.get('/weather/country', (req, res) => {
 app.get('/weather/*', (req, res) => {
     res.render('404.html', {
         title: '404',
-        msgError: "Weather it's in holiday",
+        msgError: "Weather it's in holiday", 
     });
 })
+
+// If we see this error "Cannot set headers after they are sent to the client" that means we send response two times (use return or else)
+// get /products?search=games
+app.get('/products', (req, res) => {
+    if (!req.query.search) {
+        return res.send({
+            error: 'You must provide a search term',
+        });
+    }
+
+    console.log(req.query);
+    res.send({
+        products: [],
+    });
+});
+
 
 // Setup a generic 404 page. 
 // Call this route lastly
@@ -71,7 +99,6 @@ app.get('*', (req, res) => {
         msgError: 'Houston we have a problem!',
     });
 });
-
 
 // Start server
 app.listen(3000, () => {
