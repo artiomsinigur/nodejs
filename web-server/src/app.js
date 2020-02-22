@@ -33,11 +33,11 @@ app.use(express.static(publicDirectoryPath));
 // res - response have a bunch of methods that allow us to customize what we want to send to requester
 app.get('', (req, res) => {
     res.render('index.html', {
-        title: 'Title de page',
-        courses: [
-            {lesson: 'NodeJs'},
-            {lesson: 'JS'},
-            {lesson: 'HTML et CSS'},
+        title: 'List of cities',
+        cities: [
+            {city: 'Montréal'},
+            {city: 'Toronto'},
+            {city: 'Vancouver'},
         ],
     });
 });

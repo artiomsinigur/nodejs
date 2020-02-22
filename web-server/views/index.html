@@ -1,11 +1,16 @@
 {% extends 'layouts/app.html' %}
 
     {% block main %}
-        <h1>Hello {{title}}</h1>
+        <h2>{{title}}</h2>
         <ul>
-            {% for item in courses %}
-                <li>{{ item.lesson }}</li>
+            {% for item in cities %}
+                <li>{{ item.city }}</li>
             {% endfor %}
         </ul>
-        <img src="/img/nodejs.png" alt="">
+
+        <form action="">
+            <input type="text" name="search" placeholder="Location">
+            <button>Search</button>
+        </form>
+        <div id="content"></div>
     {% endblock %}
