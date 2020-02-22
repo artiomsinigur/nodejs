@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Node Js</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/build.js"></script>
+</head>
+<body>
+    {% include '../parts/header.html' %}
+    <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/weather">Weather</a>
+    </nav>
+    
+    <main>
+        {% block main %}
+            <p>Non content yet</p>
+        {% endblock %}
+    </main>
+    
+    {% include '../parts/footer.html' %}
+</body>
+</html>

@@ -1,0 +1,11 @@
+{% extends 'layouts/app.html' %}
+
+    {% block main %}
+        <h1>Hello {{title}}</h1>
+        <ul>
+            {% for item in courses %}
+                <li>{{ item.lesson }}</li>
+            {% endfor %}
+        </ul>
+        <img src="/img/nodejs.png" alt="">
+    {% endblock %}
