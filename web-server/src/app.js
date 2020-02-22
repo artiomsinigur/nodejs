@@ -1,8 +1,8 @@
 const path = require('path'); // Usually we include path before express
 const express = require('express');
 const nunjucks = require('nunjucks');
-// const getGeocoding = require('../../weather-app/utils/geocoding');
-// const getForecast = require('../../weather-app/utils/forecast');
+const getGeocoding = require('./utils/geocoding');
+const getForecast = require('./utils/forecast');
 
 const app = express();
 
@@ -46,6 +46,8 @@ app.get('/about', (req, res) => {
     res.render('about.html');
 })
 
+// If we see this error "Cannot set headers after they are sent to the client" that means we send response two times (use return or else)
+// get /products?search=games
 app.get('/weather', (req, res) => {
     if (!req.query.address) {
         return res.send({
@@ -53,13 +55,22 @@ app.get('/weather', (req, res) => {
         });
     }
 
-    res.send({
-        location: req.query.address,
-    });
+    getGeocoding(req.query.address, (err, {longitude, latitude, placeName}) => {
+        if (err) {
+            return res.send({error: err});
+        }
 
-    // res.render('weather.html', {
-    //     location: req.query.address,
-    // });
+        getForecast(longitude, latitude, (err, forecastData) => {
+            if (err) {
+                return res.send({error: err});
+            }
+
+            res.render('weather.html', {
+                location: placeName,
+                forecast: forecastData,
+            });
+        });
+    });
 })
 
 app.get('/weather/country', (req, res) => {
@@ -74,20 +85,19 @@ app.get('/weather/*', (req, res) => {
     });
 })
 
-// If we see this error "Cannot set headers after they are sent to the client" that means we send response two times (use return or else)
-// get /products?search=games
-app.get('/products', (req, res) => {
-    if (!req.query.search) {
-        return res.send({
-            error: 'You must provide a search term',
-        });
-    }
 
-    console.log(req.query);
-    res.send({
-        products: [],
-    });
-});
+// app.get('/products', (req, res) => {
+//     if (!req.query.search) {
+//         return res.send({
+//             error: 'You must provide a search term',
+//         });
+//     }
+
+//     console.log(req.query);
+//     res.send({
+//         products: [],
+//     });
+// });
 
 
 // Setup a generic 404 page. 
