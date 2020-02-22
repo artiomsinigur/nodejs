@@ -50,6 +50,28 @@ app.get('/weather', (req, res) => {
     res.render('weather.html');
 })
 
+app.get('/weather/country', (req, res) => {
+    res.render('country.html');
+})
+
+// Setup a specify 404 page for path weather/*
+app.get('/weather/*', (req, res) => {
+    res.render('404.html', {
+        title: '404',
+        msgError: "Weather it's in holiday",
+    });
+})
+
+// Setup a generic 404 page. 
+// Call this route lastly
+// * match anythings else that that is not set in router
+app.get('*', (req, res) => {
+    res.render('404.html', {
+        title: '404',
+        msgError: 'Houston we have a problem!',
+    });
+});
+
 
 // Start server
 app.listen(3000, () => {
