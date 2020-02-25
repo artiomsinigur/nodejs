@@ -1,7 +1,9 @@
-console.log('Client side JS file is loaded!');
-
 const form = document.querySelector('form');
 const content = document.getElementById('content');
+const todayForecast = document.getElementById('todayForecast');
+const getDaily = document.getElementById('daily');
+
+import {Render} from './Render.mjs';
 
 form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -11,18 +13,28 @@ form.addEventListener('submit', (e) => {
     // Text decorative, just to show that data is loading
     createElm(content, 'p', 'Loading...');
 
-    fetch('http://localhost:3000/weather?address=' + inputLocation)
+    fetch('/weather?address=' + inputLocation)
         .then((response) => {
             return response.json();
         })
-        .then(({location, forecast, error}) => {
-            if (error) {
-                createElm(content, 'p', error);
-            } else {
-                createElm(content, 'p', location, forecast);
+        .then((data) => {
+            if (data.error) {
+                createElm(content, 'p', data.error);
+                return;
+            }
+
+            const forecastToday = new Render(data, todayForecast);
+            forecastToday.getToday();
+
+            const forecastDaily = new Render(data, getDaily);
+            forecastDaily.getDays();
+
+            if (content.hasChildNodes()) {
+                content.firstChild.remove();
             }
         });
 });
+
 
 /**
  * Create an node with given data
