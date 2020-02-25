@@ -27,3 +27,20 @@ function add(a, b, getSum) {
 add(1, 4, (sum) => {
     console.log(sum);
 });
+
+
+// Basic example of callback
+function doCallback(callback) {
+    setTimeout(() => {
+        // callback('My error', undefined);
+        callback(undefined, [1, 5, 8]);
+    }, 2000);
+}
+
+doCallback((err, res) => {
+    if (err) {
+        return console.error(err);
+    } else {
+        console.log(res);
+    }
+});
