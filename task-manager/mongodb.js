@@ -73,12 +73,84 @@ MongoClient.connect(connectionURL, {useNewUrlParser: true, useUnifiedTopology: t
         //     console.log(user);
         // });
 
+        // With promise - If use promise no need callback function
+        // db.collection('users').findOne({name: 'Artiom'})
+        //     .then((res) => {
+        //         console.log(res);
+        //     })
+        //     .catch((err) => {
+        //         console.error(res);
+        //     })
+
         // Find many
-        // db.collection('users').find({ age: 33, name: 'John }).toArray((err, document) => {
+        // db.collection('users').find({ age: 33, name: 'John' }).toArray((err, document) => {
         //     if (err) {
         //         return console.log('Unable to find the user');
         //     }
         //     console.log(document);
         // });
 
+        
+    // UPDATE
+    // http://mongodb.github.io/node-mongodb-native/3.5/api/Collection.html#updateOne
+    // https://docs.mongodb.com/manual/reference/operator/update-field/
+    // ==============================
+        // Update a document's field with a filter $set or $inc
+        // db.collection('users').updateOne({
+        //     _id: new ObjectID('5e556402ea814952bc78086d')
+        // }, {
+        //     $set: {
+        //         name: 'Leo'
+        //     },
+        //     $inc: {
+        //         age: 1
+        //     }
+        // })
+        // .then((res) => {
+        //     console.log('Updated', res);
+        // })
+        // .catch((err) => {
+        //     console.log('Something goes wrong!', err);
+        // })
+
+        // Update many documents
+        // db.collection('tasks').updateMany({
+        //     completed: false
+        // }, {
+        //     $set: {
+        //         completed: true
+        //     }
+        // })
+        // .then((res) => {
+        //     console.log('Updated');
+        // })
+        // .catch((err) => {
+        //     console.error('Unable to update');
+        // })
+
+
+    // DELETE
+    // ==============================
+        // Delete one document
+        // db.collection('users').deleteOne({
+        //     name: 'Andrew'
+        // })
+        // .then((res) => {
+        //     console.log('Deleted');
+        // })
+        // .catch((err) => {
+        //     console.log(err);
+        // })
+        
+        // Delete many documents
+        // db.collection('users').deleteMany({
+        //     age: 33
+        // })
+        // .then((res) => {
+        //     console.log('Deleted', res);
+        // })
+        // .catch((err) => {
+        //     console.log(err);
+        // })
+        
 });
