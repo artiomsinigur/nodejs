@@ -8,6 +8,11 @@ const User = mongoose.model('User', {
         type: String,
         required: true,
         trim: true,
+        validate(value) {
+            if (validator.isNumeric(value)) {
+                throw new Error('Number is not allowed!');
+            }
+        }
     },
     password: {
         type: String,
