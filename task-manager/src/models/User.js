@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 // This allowed to take advantage of middleware
 // To apply a unique property follow next steps:
@@ -50,9 +51,31 @@ const userSchema = new mongoose.Schema({
                 throw new Error('Age must be a positive number!');
             }
         }
-    }
+    },
+    tokens: [{
+        token: {
+            type: String,
+            required: true
+        }
+    }]
 });
 
+/**
+ * Generate token
+ * Methods is instance of document
+ */
+userSchema.methods.generateAuthToken = async function() {
+    const user = this;
+    // Because user._id is object
+    const token = jwt.sign({ _id: user._id.toString() }, 'thisismysecretkey');
+
+    // Store token
+    // user.tokens = user.tokens.concat({ token });
+    user.tokens.push({ token });
+    await user.save();
+
+    return token;
+};
 
 /**
  * Login
