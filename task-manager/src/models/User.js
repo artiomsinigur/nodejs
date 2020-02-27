@@ -3,6 +3,10 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
 // This allowed to take advantage of middleware
+// To apply a unique property follow next steps:
+    // 1) Remove all documents from the users collection.
+    // 2) From the mongo shell, execute the command: db.users.createIndex({email: 1}, {unique: true})
+
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -27,10 +31,11 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
+        unique: true,
         required: true,
         trim: true,
         lowercase: true,
-        // Custom validate
+        // Custom validation
         validate(value) {
             if (!validator.isEmail(value)) {
                 throw new Error('Email must be valid!');
@@ -48,9 +53,33 @@ const userSchema = new mongoose.Schema({
     }
 });
 
+
+/**
+ * Login
+ * Define a personal method
+ */
+userSchema.statics.findByCredentials = async (email, password) => {
+    // Step 1 find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+        throw new Error('Unable to login!');
+    }
+
+    // Step 2 check given password with password form DB
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+        throw new Error('Unable to login!');
+    }
+
+    return user;
+}
+
 // You must add all middleware and plugins BEFORE calling `mongoose.model().
 // pre - doing somethings BEFORE
 // post - doing somethings AFTER
+/**
+ * Hash the plaintext password
+ */
 userSchema.pre('save', async function(next) {
     // this will refer the actual document(user)
     const user = this;
