@@ -61,7 +61,14 @@ router.patch('/users/:id', async (req, res) => {
     }
 
     try {
-        const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true});
+        // Model.update,findByIdAndUpdate,findOneAndUpdate,findOneAndRemove,findByIdAndRemove are all commands executed directly in the database. So that why pre, post middleware are not executed.
+        // The only way to get the hooks to execute is to use separate find() and save() calls as mentioned above.
+        const user = await User.findById(req.params.id);
+        keysUpdate.forEach((key) => user[key] = req.body[key]);
+        await user.save();
+        
+        
+        // const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true});
         // if non user founded
         if (!user) {
             return res.status(404).send();
