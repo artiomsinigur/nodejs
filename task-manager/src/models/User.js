@@ -66,7 +66,7 @@ const userSchema = new mongoose.Schema({
  */
 userSchema.methods.generateAuthToken = async function() {
     const user = this;
-    // Because user._id is object
+    // Convert _id to String because user._id is object
     const token = jwt.sign({ _id: user._id.toString() }, 'thisismysecretkey');
 
     // Store token

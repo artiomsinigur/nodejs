@@ -1,6 +1,7 @@
 const express = require('express');
-const router = express.Router();
+const auth = require('../middleware/auth'); // Call me before router
 const User = require('../models/User');
+const router = new express.Router();
 
 /**
  * Find user by id
@@ -23,15 +24,10 @@ const findUserById = async (req, res) => {
 router.get('/users/:id', findUserById); 
 
 /**
- * Find all users
+ * Find profile of current user
  */
-router.get('/users', async (req, res) => {
-    try {
-        const users = await User.find({});
-        res.send(users);
-    } catch (error) {
-        res.status(500).send();
-    }
+router.post('/users/me', auth, async (req, res) => {
+    res.send(req.user);
 });
 
 /**
