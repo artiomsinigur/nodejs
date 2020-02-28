@@ -1,47 +1,30 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-// const auth = async (req, res, next) => {
-//     try {
-//         // Take token from header Authorization
-//         // replace('Bearer ', '') delete Bearer string from token of header
-//         const token = req.header('Authorization').replace('Bearer ', '');
-
-//         // Check token from header with secret key from model User
-//         const decoded = jwt.verify(token, 'thisismysecretkey');
-
-//         // Grape the id from decoded token and check if the given token are in the user's tokens array
-//         const user = await User.findOne({ _id: decoded._id, 'tokens.token': token });
-
-//         if (!user) {
-//             throw new Error();
-//         }
-
-//         // Give to that route handler access to the user that we fetched from the DB
-//         req.user = user;
-
-//         // If the user proved the right token we go on
-//         next();
-//     } catch (error) {
-//         res.status(401).send({ error: 'Please authenticate!' });
-//     }
-// }
-
-
 const auth = async (req, res, next) => {
     try {
-        const token = req.header('Authorization').replace('Bearer ', '')
-        const decoded = jwt.verify(token, 'thisismysecretkey')
-        const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
+        // Take token from header Authorization
+        // replace('Bearer ', '') delete Bearer string from token of header
+        const token = req.header('Authorization').replace('Bearer ', '');
+
+        // Check token from header with secret key from model User
+        const decoded = jwt.verify(token, 'thisismysecretkey');
+
+        // Grape the id from decoded token and check if the given token are in the user's tokens array
+        const user = await User.findOne({ _id: decoded._id, 'tokens.token': token });
 
         if (!user) {
-            throw new Error()
+            throw new Error();
         }
 
-        req.user = user
-        next()
-    } catch (e) {
-        res.status(401).send({ error: 'Please authenticate.' })
+        req.token = token;
+        // Give to that route handler access to the user that we fetched from the DB
+        req.user = user;
+
+        // If the user proved the right token we go on
+        next();
+    } catch (error) {
+        res.status(401).send({ error: 'Please authenticate!' });
     }
 }
 

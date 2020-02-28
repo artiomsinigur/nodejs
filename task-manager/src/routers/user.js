@@ -59,6 +59,36 @@ router.post('/users/login', async (req, res) => {
 });
 
 /**
+ * Logout user
+ */
+router.post('/users/logout', auth, async (req, res) => {
+    try {
+        // If login on multiply devices, logout only from actual. Kep login on others devices
+        // Delete the token that are equal with the current token from tokens array
+        req.user.tokens = req.user.tokens.filter(item => item.token !== req.token);
+        await req.user.save();
+
+        res.send();
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+/**
+ * Logout user form all devices
+ */
+router.post('/users/logoutAll', auth, async (req, res) => {
+    try {
+        req.user.tokens = [];
+        await req.user.save();
+
+        res.send();
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+/**
  * Update an user
  */
 router.patch('/users/:id', async (req, res) => {
