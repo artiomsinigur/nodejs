@@ -60,6 +60,13 @@ const userSchema = new mongoose.Schema({
     }]
 });
 
+// virtual relationship between collections User and Task
+userSchema.virtual('tasks', {
+    ref: 'Task', // collection
+    localField: '_id', // of the user
+    foreignField: 'owner' // field from Task collection
+})
+
 /**
  * Get public profile and hide sensitive data
  * This method will apply for every route where we show user data
