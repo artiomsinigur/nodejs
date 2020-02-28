@@ -61,6 +61,21 @@ const userSchema = new mongoose.Schema({
 });
 
 /**
+ * Get public profile and hide sensitive data
+ * This method will apply for every route where we show user data
+ */
+userSchema.methods.toJSON = function () {
+    const user = this;
+    // Convert in normal Object
+    const userObject = user.toObject();
+
+    delete userObject.password;
+    delete userObject.tokens;
+
+    return userObject;
+}
+
+/**
  * Generate token
  * Methods is instance of document
  */

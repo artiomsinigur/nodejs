@@ -6,22 +6,22 @@ const router = new express.Router();
 /**
  * Find user by id
  */
-const findUserById = async (req, res) => {
-    const _id = req.params.id;
+// const findUserById = async (req, res) => {
+//     const _id = req.params.id;
 
-    try {
-        const user = await User.findById(_id);
+//     try {
+//         const user = await User.findById(_id);
 
-        if (!user) {
-            return res.status(404).send();
-        }
+//         if (!user) {
+//             return res.status(404).send();
+//         }
 
-        res.send(user);
-    } catch (error) {
-        res.status(500).send();
-    }    
-};
-router.get('/users/:id', findUserById); 
+//         res.send(user);
+//     } catch (error) {
+//         res.status(500).send();
+//     }    
+// };
+// router.get('/users/:id', findUserById); 
 
 /**
  * Find profile of current user
@@ -91,7 +91,7 @@ router.post('/users/logoutAll', auth, async (req, res) => {
 /**
  * Update an user
  */
-router.patch('/users/:id', async (req, res) => {
+router.patch('/users/me', auth, async (req, res) => {
     const keysUpdate = Object.keys(req.body);
     const allowedUpdate = ['name', 'password', 'email', 'age'];
     const isValidOperation = keysUpdate.every(key => allowedUpdate.includes(key));
@@ -103,33 +103,54 @@ router.patch('/users/:id', async (req, res) => {
     try {
         // Model.update,findByIdAndUpdate,findOneAndUpdate,findOneAndRemove,findByIdAndRemove are all commands executed directly in the database. So that why pre, post middleware are not executed.
         // The only way to get the hooks to execute is to use separate find() and save() calls as mentioned above.
-        const user = await User.findById(req.params.id);
-        keysUpdate.forEach((key) => user[key] = req.body[key]);
-        await user.save();
         
-        // const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true});
-        // if non user founded
-        if (!user) {
-            return res.status(404).send();
-        }
-        res.send(user);
+        keysUpdate.forEach((key) => req.user[key] = req.body[key]);
+        await req.user.save();
+        res.send(req.user);
     } catch (error) {
         res.status(400).send(error);
     }
 });
 
+// router.patch('/users/:id', auth, async (req, res) => {
+//     const keysUpdate = Object.keys(req.body);
+//     const allowedUpdate = ['name', 'password', 'email', 'age'];
+//     const isValidOperation = keysUpdate.every(key => allowedUpdate.includes(key));
+
+//     if (!isValidOperation) {
+//         return res.status(400).send({ error: 'Invalid updates!' });
+//     }
+
+//     try {
+//         // Model.update,findByIdAndUpdate,findOneAndUpdate,findOneAndRemove,findByIdAndRemove are all commands executed directly in the database. So that why pre, post middleware are not executed.
+//         // The only way to get the hooks to execute is to use separate find() and save() calls as mentioned above.
+//         const user = await User.findById(req.params.id);
+//         keysUpdate.forEach((key) => user[key] = req.body[key]);
+//         await user.save();
+        
+//         // const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true});
+//         // if non user founded
+//         if (!user) {
+//             return res.status(404).send();
+//         }
+//         res.send(user);
+//     } catch (error) {
+//         res.status(400).send(error);
+//     }
+// });
+
 /**
  * Delete user
  */
-router.delete('/users/:id', async (req, res) => {
+router.delete('/users/me', auth, async (req, res) => {
     try {
-        const user = await User.findByIdAndDelete(req.params.id);
+        // const user = await User.findByIdAndDelete(req.user._id);
+        // if (!user) {
+        //     return res.status(404).send();
+        // }
 
-        if (!user) {
-            return res.status(404).send();
-        }
-
-        res.send();
+        await req.user.remove();
+        res.send(req.user);
     } catch (error) {
         res.status(500).send(error);
     }
