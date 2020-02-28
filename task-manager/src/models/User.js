@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const Task = require('./Task');
 
 // This allowed to take advantage of middleware
 // To apply a unique property follow next steps:
@@ -123,7 +124,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
 // pre - doing somethings BEFORE
 // post - doing somethings AFTER
 /**
- * Hash the plaintext password
+ * Middleware - Hash the plaintext password
  */
 userSchema.pre('save', async function(next) {
     // this will refer the actual document(user)
@@ -139,6 +140,18 @@ userSchema.pre('save', async function(next) {
     // Call next when we are done
     next();
 });
+
+/**
+ * Middleware - Delete user tasks when user is deleted
+ */
+userSchema.pre('remove', async function (next) {
+    const user = this;
+    await Task.deleteMany({ owner: user._id });
+    
+    next();
+})
+
+
 
 // With Mongoose, everything is derived from a Schema. 
 // Let's get a reference to it and define a User schema and compile our schema into a Model.
