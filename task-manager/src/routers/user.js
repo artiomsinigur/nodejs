@@ -1,6 +1,7 @@
 const express = require('express');
 const auth = require('../middleware/auth'); // Call me before router
 const User = require('../models/User');
+const sharp = require('sharp'); 
 const multer = require('multer');
 const router = new express.Router();
 
@@ -193,8 +194,14 @@ const upload = multer({
 
 // or handle error with an callback all followed params arr required (error, req, res, next)
 router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => {
+    const buffer = await sharp(req.file.buffer)
+    .resize({ width: 250, height: 250 })
+    .png()
+    .toBuffer();
+    req.user.avatar = buffer;
+    
     // Store file in avatar field in Model
-    req.user.avatar = req.file.buffer
+    // req.user.avatar = req.file.buffer
     await req.user.save();
 
     res.send();
@@ -231,7 +238,8 @@ router.get('/users/:id/avatar', async (req, res) => {
         }
 
         // Set the type of file
-        res.set('Content-Type', 'image/jpg');
+        res.set('Content-Type', 'image/png');
+        // res.set('Content-Type', 'image/jpg');
         res.send(user.avatar);
     } catch (error) {
         res.status(404).send();
