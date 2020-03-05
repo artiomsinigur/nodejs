@@ -38,7 +38,12 @@ router.get('/tasks', async (req, res) => {
 /**
  * Find owner's tasks 
  */
-// GET /tasks/owner?completed=true
+// Filter
+    // GET /tasks/owner?completed=true
+// Pagination
+    // GET /tasks?limit=10&skip=0
+        // skip=0 get 1 to 10
+        // skip=10 get 10 to 20 and so on
 router.get('/tasks/owner', auth, async (req, res) => {
     try {
         // const tasks = await Task.find({ owner: req.user._id});
@@ -51,6 +56,10 @@ router.get('/tasks/owner', auth, async (req, res) => {
             path: 'tasks',
             match: {
                 completed: req.query.completed === 'true'
+            },
+            options: {
+                limit: parseInt(req.query.limit),
+                skip: parseInt(req.query.skip)
             } 
         })
         .execPopulate();
