@@ -163,7 +163,9 @@ router.delete('/users/me', auth, async (req, res) => {
 // Configuration
     // Create an instance
 const upload = multer({
-    dest: 'img/avatars',
+    // When using dest, we store files directly on folder. 
+    // If we store files in buffer type we handle the destination in route 
+    // dest: 'img/avatars',
     limits: {
         fileSize: 1000000
     },
@@ -190,7 +192,11 @@ const upload = multer({
 // then replace upload.single('avatar') by errorMiddleware
 
 // or handle error with an callback all followed params arr required (error, req, res, next)
-router.post('/users/me/avatar', upload.single('avatar'), (req, res) => {
+router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => {
+    // Store file in avatar field in Model
+    req.user.avatar = req.file.buffer
+    await req.user.save();
+
     res.send();
 }, (error, req, res, next) => {
     res.status(400).send({ error: error.message });
