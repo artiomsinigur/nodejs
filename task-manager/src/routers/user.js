@@ -1,6 +1,7 @@
 const express = require('express');
 const auth = require('../middleware/auth'); // Call me before router
 const User = require('../models/User');
+const multer = require('multer');
 const router = new express.Router();
 
 /**
@@ -154,6 +155,33 @@ router.delete('/users/me', auth, async (req, res) => {
     } catch (error) {
         res.status(500).send(error);
     }
+});
+
+/**
+ * Upload image
+ */
+// Configuration
+    // Create an instance
+const upload = multer({
+    dest: 'img/avatars',
+    limits: {
+        fileSize: 1000000
+    },
+    fileFilter(req, file, cb) {
+        // if (!file.originalname.endsWith('.pdf')) {
+        //     return cb(new Error('Please upload a PDF')); // Reject file with a message
+        // }
+        // or with regex
+        if (!file.originalname.match(/\.(jpg|jpeg|png|pdf|doc|docx)$/)) {
+            return cb(new Error('Please upload files only with following extensions: JPG, JPEG, PNG, PDF, DOCX or DOC'));
+        }
+        cb(undefined, true); // Accept the file
+    }
+})
+
+// upload.single('avatar') - is the name(avatar) for the key when registering the middleware
+router.post('/users/me/avatar', upload.single('avatar'), (req, res) => {
+    res.send();
 });
 
 module.exports = router;
