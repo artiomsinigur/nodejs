@@ -44,6 +44,8 @@ router.get('/tasks', async (req, res) => {
     // GET /tasks?limit=10&skip=0
         // skip=0 get 1 to 10
         // skip=10 get 10 to 20 and so on
+// Sort
+    // GET /tasks?sortBy=createdAt:desc
 router.get('/tasks/owner', auth, async (req, res) => {
     try {
         // const tasks = await Task.find({ owner: req.user._id});
@@ -52,6 +54,15 @@ router.get('/tasks/owner', auth, async (req, res) => {
         // await req.user.populate('tasks').execPopulate();
         // res.send(req.user.tasks);
 
+        const sort = {};
+        if (req.query.sortBy) {
+            // obj['key'] = value
+            // obj.key // value
+            const parts = req.query.sortBy.split(':', 2);
+            sort[parts[0]] = (parts[1] === 'desc') ? -1 : 1;
+            // { createdAt: -1 }
+        }
+
         await req.user.populate({
             path: 'tasks',
             match: {
@@ -59,7 +70,8 @@ router.get('/tasks/owner', auth, async (req, res) => {
             },
             options: {
                 limit: parseInt(req.query.limit),
-                skip: parseInt(req.query.skip)
+                skip: parseInt(req.query.skip),
+                sort
             } 
         })
         .execPopulate();
