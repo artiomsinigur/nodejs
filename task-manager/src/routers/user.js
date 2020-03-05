@@ -217,4 +217,24 @@ router.delete('/users/me/avatar', auth, async (req, res) => {
     }
 });
 
+/**
+ * Fetch image back from binary
+ */
+// When we get this route, the image will fetch and to render it we do as follow:
+// <img src="http://localhost:3000/users/5e615b2ef9543c4af4de74c1/avatar" alt="">
+router.get('/users/:id/avatar', async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+
+        if (!user || !user.avatar) {
+            throw new Error();
+        }
+
+        // Set the type of file
+        res.set('Content-Type', 'image/jpg');
+        res.send(user.avatar);
+    } catch (error) {
+        res.status(404).send();
+    }
+});
 module.exports = router;
