@@ -179,9 +179,21 @@ const upload = multer({
     }
 })
 
+
+
 // upload.single('avatar') - is the name(avatar) for the key when registering the middleware
+
+// We can set own middleware
+// const errorMiddleware = (req, res, next) => {
+//     throw new Error('My error from middleware');
+// }
+// then replace upload.single('avatar') by errorMiddleware
+
+// or handle error with an callback all followed params arr required (error, req, res, next)
 router.post('/users/me/avatar', upload.single('avatar'), (req, res) => {
     res.send();
+}, (error, req, res, next) => {
+    res.status(400).send({ error: error.message });
 });
 
 module.exports = router;
